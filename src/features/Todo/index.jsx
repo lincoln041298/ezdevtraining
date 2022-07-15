@@ -4,12 +4,10 @@ import ListPage from "./pages/ListPage";
 export default function index() {
   return (
     <div>
-    
       <Routes>
-        <Route path="/todos" component={ListPage}></Route>
-        <Route path="todos/:todoId" component={DetailPage}></Route>
+        <Route path="/todo" element={<ListPage />}></Route>
+        <Route path="todo/:todoId" element={<DetailPage />}></Route>
       </Routes>
     </div>
-  )
+  );
 }
-
