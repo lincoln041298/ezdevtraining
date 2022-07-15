@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import TodoList from "../../components/TodoList";
+import React, { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import TodoList from '../../components/TodoList';
 
 ListPage.propTypes = {};
 
@@ -7,50 +8,56 @@ function ListPage(props) {
   const initTodoList = [
     {
       id: 1,
-      title: "Eat",
-      status: "new",
+      title: 'Eat',
+      status: 'new',
     },
     {
       id: 2,
-      title: "sleep",
-      status: "completed",
+      title: 'sleep',
+      status: 'completed',
     },
     {
       id: 3,
-      title: "Code",
-      status: "new",
+      title: 'Code',
+      status: 'new',
     },
   ];
 
+  const [searchParams, setSeachParams] = useSearchParams();
   const [todoList, setTodoList] = useState(initTodoList);
-  const [filteredStatus, setFilteredStatus] = useState("all");
+  const [filteredStatus, setFilteredStatus] = useState(() => searchParams.get('status') || 'all');
 
   const handleTodoClick = (todo, idx) => {
     console.log(todo, idx);
     const newTodoList = [...todoList];
     newTodoList[idx] = {
       ...newTodoList[idx],
-      status: newTodoList[idx].status === "new" ? "completed" : "new",
+      status: newTodoList[idx].status === 'new' ? 'completed' : 'new',
     };
     // newTodoList[idx] = newTodo;
     setTodoList(newTodoList);
   };
 
   const handleShowAllClick = () => {
-    setFilteredStatus("all");
+    setFilteredStatus('all');
+    const queryParams = { status: 'all' };
+    setSeachParams(queryParams);
   };
 
   const handleShowCompletedClick = () => {
-    setFilteredStatus("completed");
+    setFilteredStatus('completed');
+    const queryParams = { status: 'completed' };
+    setSeachParams(queryParams);
   };
 
   const handleShowNewClick = () => {
-    setFilteredStatus("new");
+    setFilteredStatus('new');
+    const queryParams = { status: 'new' };
+    setSeachParams(queryParams);
   };
-
-  const renderedTodoList = todoList.filter(
-    (todo) => filteredStatus === "all" || filteredStatus === todo.status
-  );
+  const renderedTodoList = useMemo(() => {
+    return todoList.filter((todo) => filteredStatus === 'all' || filteredStatus === todo.status);
+  }, [todoList, filteredStatus]);
 
   return (
     <div>
