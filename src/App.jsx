@@ -5,13 +5,13 @@ import './App.css';
 import NotFound from './components/NotFound';
 import AlbumFeature from './features/Album';
 import TodoFeature from './features/Todo';
-
+import Counter from './features/Counter';
 function App() {
   useEffect(() => {
     const fetchProduct = async () => {
       const params = {
         _limit: 10,
-      }
+      };
       const ProductList = await productApi.getAll(params);
       console.log(ProductList);
     };
@@ -30,6 +30,7 @@ function App() {
       </p>
       <Routes>
         {/* <Route index element="/home" /> */}
+        <Route path='/' element={<Counter />}></Route>
         <Route path='/todos/*' element={<TodoFeature />}></Route>
         <Route path='/albums' element={<AlbumFeature />}></Route>
         <Route path='*' element={<NotFound />}></Route>

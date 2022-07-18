@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import TodoForm from '../../components/TodoForm';
 import TodoList from '../../components/TodoList';
 
 ListPage.propTypes = {};
@@ -28,7 +29,6 @@ function ListPage(props) {
   const [filteredStatus, setFilteredStatus] = useState(() => searchParams.get('status') || 'all');
 
   const handleTodoClick = (todo, idx) => {
-    console.log(todo, idx);
     const newTodoList = [...todoList];
     newTodoList[idx] = {
       ...newTodoList[idx],
@@ -59,8 +59,13 @@ function ListPage(props) {
     return todoList.filter((todo) => filteredStatus === 'all' || filteredStatus === todo.status);
   }, [todoList, filteredStatus]);
 
+  const handleTodoFormSubmit = (values) => {
+    console.log('Form submit: ', values);
+  };
   return (
     <div>
+      <h3>Todo Form</h3>
+      <TodoForm onSubmit={handleTodoFormSubmit} />
       <h3>Todo List</h3>
       <TodoList todoList={renderedTodoList} onTodoClick={handleTodoClick} />
       <div>
