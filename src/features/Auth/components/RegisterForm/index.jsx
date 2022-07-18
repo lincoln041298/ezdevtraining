@@ -1,4 +1,4 @@
-import { resolveComponentProps } from '@mui/base';
+import { yupResolver } from "@hookform/resolvers/yup";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -10,22 +10,24 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import Register from '../Register';
-import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import './style.scss';
 
 const schema = yup.object().shape({
-    email: yup.string().email().required('please enter your email'),
-    password: yup.string().min(8).max(32).required(),
+    email: yup.string().required('Please enter your email').email('please Enter a valid email address'),
+    password: yup.string().required('please enter your password').min(8,'Min password is 8 characters').max(32, 'Maximum just 32 charanters'),
   });
 
 export default function RegisterForm() {
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema),
       });
-      const onSubmitHandler = (data) => {
-        console.log({ data });
+      const onSubmitHandler = (event) => {
+        const data = new FormData(event.currentTarget);
+        console.log({
+            email: data.get('email'),
+            password: data.get('password'),
+          });
         reset();
       };
 
@@ -55,7 +57,7 @@ export default function RegisterForm() {
           </Grid>
           <Grid item xs={12}>
             <TextField required fullWidth id='email' label='Email Address' name='email' autoComplete='email' {...register("email")} />
-            <p>{errors.email?.message}</p>
+            <p  className='register__error'>{errors.email?.message}</p>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -66,8 +68,9 @@ export default function RegisterForm() {
               type='password'
               id='password'
               autoComplete='new-password'
-
+              {...register("password")}
             />
+            <p className='register__error'>{errors.password?.message}</p>
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
