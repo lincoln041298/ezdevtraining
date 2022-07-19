@@ -31,11 +31,11 @@ export default function RegisterForm(props) {
     resolver: yupResolver(schema),
   });
   const onSubmitHandler = (values) => {
-    
+    console.log({values})
     const data = new FormData(values.currentTarget);
-    console.log({  email: data.get('email'),
+    console.log({  
+    email: data.get('email'),
     password: data.get('password'), });
-    reset();
   };
 
   return (
