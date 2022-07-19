@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
+import RegisterForm from 'features/Auth/components/RegisterForm';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import Register from '../../features/Auth/components/Register';
@@ -71,7 +72,7 @@ export default function ButtonAppBar() {
         }} open={open}>
           <DialogTitle>Subscribe</DialogTitle>
           <DialogContent>
-            <Register/>
+            <RegisterForm/>
             {/* <TextField
               autoFocus
               margin='dense'
@@ -82,10 +83,6 @@ export default function ButtonAppBar() {
               variant='standard'
             /> */}
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Subscribe</Button>
-          </DialogActions>
         </Dialog>
       </div>
     </>

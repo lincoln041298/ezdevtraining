@@ -1,4 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from '@hookform/resolvers/yup';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -10,34 +10,33 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import * as yup from "yup";
+import * as yup from 'yup';
 import './style.scss';
-
-
 
 export default function RegisterForm(props) {
   const schema = yup.object().shape({
     email: yup.string().required('Please enter your email').email('please Enter a valid email address'),
-    password: yup.string().required('please enter your password').min(8,'Min password is 8 characters').max(32, 'Maximum just 32 charanters'),
+    password: yup
+      .string()
+      .required('please enter your password')
+      .min(8, 'Min password is 8 characters')
+      .max(32, 'Maximum just 32 charanters'),
   });
-    const form = useForm({
-      defaultValues: {
-        fullname: ' ',
-        email: '',
-        password: ''
-      },
-        resolver: yupResolver(schema),
-      });
-      const handleSubmit = (values) => {
-        const {onSubmit} = props;
-      
-        if(onSubmit) {
-          onSubmit(values)
-          console.log(values)
-        }
-
-        form.reset()
-      };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+  const onSubmitHandler = (values) => {
+    
+    const data = new FormData(values.currentTarget);
+    console.log({  email: data.get('email'),
+    password: data.get('password'), });
+    reset();
+  };
 
   return (
     <div className='register__form'>
@@ -47,7 +46,7 @@ export default function RegisterForm(props) {
       <Typography component='h1' variant='h5'>
         Create An Account
       </Typography>
-      <Box component='form' noValidate onSubmit={handleSubmit(handleSubmit)}>
+      <Box component='form' noValidate onSubmit={handleSubmit(onSubmitHandler)}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -61,10 +60,19 @@ export default function RegisterForm(props) {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField required fullWidth id='fullName' label='Last Name' name='fullname' autoComplete='family-name' />
+            <TextField required fullWidth id='lastName' label='Last Name' name='lastName' autoComplete='family-name' />
           </Grid>
           <Grid item xs={12}>
-            <TextField required fullWidth id='email' label='Email Address' name='email' autoComplete='email' />
+            <TextField
+              required
+              fullWidth
+              id='email'
+              label='Email Address'
+              name='email'
+              autoComplete='email'
+              {...register('email')}
+            />
+            <p className='register__error'>{errors.email?.message}</p>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -75,9 +83,9 @@ export default function RegisterForm(props) {
               type='password'
               id='password'
               autoComplete='new-password'
-             
+              {...register('password')}
             />
-
+            <p className='register__error'>{errors.password?.message}</p>
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
@@ -87,21 +95,16 @@ export default function RegisterForm(props) {
           </Grid>
         </Grid>
 
-        <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+        <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+          Sign Up
+        </Button>
+        <Grid container justifyContent='flex-end'>
+          <Grid item>
+            <Link href='#' variant='body2'>
+              Already have an account? Sign in
+            </Link>
+          </Grid>
+        </Grid>
       </Box>
     </div>
   );
