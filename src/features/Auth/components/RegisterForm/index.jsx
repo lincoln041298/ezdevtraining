@@ -13,22 +13,30 @@ import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import './style.scss';
 
-const schema = yup.object().shape({
+
+
+export default function RegisterForm(props) {
+  const schema = yup.object().shape({
     email: yup.string().required('Please enter your email').email('please Enter a valid email address'),
     password: yup.string().required('please enter your password').min(8,'Min password is 8 characters').max(32, 'Maximum just 32 charanters'),
   });
-
-export default function RegisterForm() {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const form = useForm({
+      defaultValues: {
+        fullname: ' ',
+        email: '',
+        password: ''
+      },
         resolver: yupResolver(schema),
       });
-      const onSubmitHandler = (event) => {
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-          });
-        reset();
+      const handleSubmit = (values) => {
+        const {onSubmit} = props;
+      
+        if(onSubmit) {
+          onSubmit(values)
+          console.log(values)
+        }
+
+        form.reset()
       };
 
   return (
@@ -39,7 +47,7 @@ export default function RegisterForm() {
       <Typography component='h1' variant='h5'>
         Create An Account
       </Typography>
-      <Box component='form' noValidate onSubmit={handleSubmit(onSubmitHandler)}>
+      <Box component='form' noValidate onSubmit={handleSubmit(handleSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -53,11 +61,10 @@ export default function RegisterForm() {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField required fullWidth id='lastName' label='Last Name' name='lastName' autoComplete='family-name' />
+            <TextField required fullWidth id='fullName' label='Last Name' name='fullname' autoComplete='family-name' />
           </Grid>
           <Grid item xs={12}>
-            <TextField required fullWidth id='email' label='Email Address' name='email' autoComplete='email' {...register("email")} />
-            <p  className='register__error'>{errors.email?.message}</p>
+            <TextField required fullWidth id='email' label='Email Address' name='email' autoComplete='email' />
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -68,9 +75,9 @@ export default function RegisterForm() {
               type='password'
               id='password'
               autoComplete='new-password'
-              {...register("password")}
+             
             />
-            <p className='register__error'>{errors.password?.message}</p>
+
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel

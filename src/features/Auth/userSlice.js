@@ -23,4 +23,7 @@ const userSlice  = createSlice({
     }
  })
 
+ export const selectUser = state => state.user.current
+ export const selectUserFetchStatus = state => state.user.status
+
  export default userSlice.reducer
